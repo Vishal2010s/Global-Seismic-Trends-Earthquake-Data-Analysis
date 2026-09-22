@@ -83,14 +83,14 @@ Paths are resolved relative to `earthquake_pipeline.py` and `app.py`. The pipeli
 ```mermaid
 flowchart TD
     A[USGS Earthquake Catalog API] --> B[Monthly GeoJSON requests]
-    B --> C[Flatten event records]
-    C --> D[Raw CSV]
-    D --> E[Parse dates and prepare fields]
-    E --> F[Location labels and missing-value treatment]
-    F --> G[Depth and magnitude categories]
-    G --> H[Continent lookup and processed CSV]
+    B --> C[Save Raw data]
+    C --> D[Load Raw CSV]
+    D --> E[Data Cleaning]
+    E --> F[Add Derived columns]
+    F --> G[Continent lookup and processed CSV]
+    G --> H[Store data in SQL]
     H -->|Optional full-table replacement| I[MySQL eq_table1]
-    J[SQL catalog and environment settings] --> K[Streamlit SQL explorer]
+    J --> K[Streamlit SQL explorer]
     I --> K
     K --> L[Result table and CSV download]
 ```
