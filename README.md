@@ -57,9 +57,8 @@ The supplied `app.py` implements the SQL explorer. Although some saved screensho
 | pycountry-convert | Country-code to continent conversion |
 | MySQL | Analytical data storage and SQL execution |
 | SQLAlchemy and PyMySQL | Database connections and uploads |
-| python-dotenv | Local environment configuration |
 | Streamlit | Interactive SQL explorer and CSV downloads |
-| Plotly | Imported dependency; unused in the supplied dashboard |
+
 
 ## Project structure
 
@@ -177,32 +176,10 @@ source .venv/bin/activate
 ### 2. Install the imported dependencies
 
 ```bash
-python -m pip install pandas requests pycountry pycountry-convert pymysql sqlalchemy python-dotenv streamlit plotly
+python -m pip install pandas requests pycountry pycountry-convert pymysql sqlalchemy streamlit
 ```
 
-### 3. Configure MySQL
-
-Create a local `.env` file beside the Python files. Replace the example values with your own settings:
-
-```dotenv
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_USER=your_mysql_user
-MYSQL_PASSWORD=your_mysql_password
-MYSQL_DATABASE=EQ1
-MYSQL_TABLE=eq_table1
-```
-
-The database name above is an example. `eq_table1` matches the pipeline's hardcoded upload table. The dashboard reads `MYSQL_TABLE`, falling back to `EQ_DATA` from the catalog when the environment variable is absent.
-
-Existing environment variables take precedence over `.env` because both scripts use `override=False`. Keep real credentials out of Git history. Suggested local exclusions include:
-
-```gitignore
-.env
-.venv/
-```
-
-### 4. Supply and align the query catalog
+### 3. Supply and align the query catalog
 
 Place the project's `app.py`. Verify that it provides:
 
