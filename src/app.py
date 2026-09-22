@@ -67,31 +67,8 @@ QUERIES = {
         "select status, count(*) as count from EQ_data group by status order by count desc",
     "15. Count by earthquake type (type):":""
         "select type, count(*) as Total_no_of_earthquakes from EQ_data group by type order by Total_no_of_earthquakes desc",
-    "16. Number of earthquakes by data type (types):" :"""
-        # "select types, count(*) as Total_no_of_earthquakes from EQ_data group by types order by Total_no_of_earthquakes desc",              
-        SELECT
-            TRIM(jt.product) AS product,
-            COUNT(*) AS event_count
-        FROM EQ_data AS e
-        CROSS JOIN JSON_TABLE(
-            CONCAT(
-                '["',
-                REPLACE(
-                    TRIM(BOTH ',' FROM e.types),
-                    ',',
-                    '","'
-                ),
-                '"]'
-            ),
-            '$[*]' COLUMNS(
-                product VARCHAR(100) PATH '$'
-            )
-        ) AS jt
-        WHERE e.types IS NOT NULL
-        AND TRIM(BOTH ',' FROM e.types) <> ''
-        GROUP BY TRIM(jt.product)
-        ORDER BY event_count DESC
-    """,
+    "16. Number of earthquakes by data type (types):" :
+        "select types, count(*) as Total_no_of_earthquakes from EQ_data group by types order by Total_no_of_earthquakes desc",              
     "17. Average RMS and gap per continent:":""
         "select continent,COUNT(*) AS event_count, ROUND(AVG(rms), 2) as avg_rms, ROUND(AVG(gap), 2) as avg_gap from EQ_data group by continent order by continent asc",
     "18. Events with high station coverage (nst > threshold):":""
