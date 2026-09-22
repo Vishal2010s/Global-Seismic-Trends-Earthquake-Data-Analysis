@@ -95,9 +95,7 @@ flowchart TD
 ```
 ### Extraction window
 
-The current loop starts at `datetime.now().year - 5` and includes the current year, requesting all twelve months for each year. It therefore creates **72 monthly requests across six calendar-year labels**, rather than an exact rolling five-year window.
-
-For example, a run during 2026 requests January 2021 through December 2026, including future months relative to its execution date. The current year can contain only partial observed data.
+The current loop starts at `datetime.now().year - 5` and includes the current year, requesting all twelve months for each year. 
 
 ## Dataset and derived fields
 
