@@ -70,7 +70,7 @@ global-seismic-trends/
 ├── README.md
 └── src/
     ├── master.py/
-    ├──app_reusable.py
+    ├──app.py
 ├── output_30 SQL queries.docx  # Saved SQL questions and output screenshots
 ├── .env                       # Create locally; do not commit credentials
 └── data/
