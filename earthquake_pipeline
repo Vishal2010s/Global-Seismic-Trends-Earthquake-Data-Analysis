@@ -3,6 +3,8 @@ import requests
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine
+import pycountry
+import pycountry_convert as pc
 import pymysql
 
 print("Imports Completed")
@@ -241,9 +243,6 @@ for i in df1['mag']:
 df1['EQ_intensity']= EQ_intensity
 
 #Adding continent column of the respective country
-import pycountry
-import pycountry_convert as pc
-
 # ── STEP 1: pycountry auto-resolves clean country names (203/532 unique values)
 unique_countries = df1['country'].unique()
 lookup_cache = {}
