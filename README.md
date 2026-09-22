@@ -90,7 +90,8 @@ flowchart TD
     F --> G[Continent lookup and processed CSV]
     G --> H[Store data in SQL]
     H -->|Optional full-table replacement| I[MySQL eq_table1]
-    I --> K[Streamlit SQL explorer]
+    I --> J[Analytical Queries]
+    J --> K[Streamlit SQL explorer]
     K --> L[Result table and CSV download]
 ```
 ### Extraction window
