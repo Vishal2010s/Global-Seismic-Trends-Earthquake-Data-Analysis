@@ -10,6 +10,15 @@ import pymysql
 print("Imports Completed")
 print("Starting data scraping...")
 
+# ----------------------------------------
+# STEP:1 : Data Scrapping and Preparation
+# ----------------------------------------
+"""
+1. Retrieve earthquake data from the USGS API for last 5 years.
+2. For each month,retrieve earthquake data in GeoJSON format as the earthquake data contains geospatial information like latitude, longitude (source:https://earthquake.usgs.gov/fdsnws/event/1/).
+3. Extract 26 dataset fields from the GeoJSON response and store them into list of dictionaries
+4. Create a Pandas DataFrame from the list of dictionaries.
+"""
 url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
 
 all_records = []
@@ -72,15 +81,23 @@ df = pd.DataFrame(all_records)
 # print(df)
 # print (all_records) 
 print("Data Scrapping completed and saved into csv file")
-#1. 	Load Data
-# Load the dataset directly from API or CSV into Pandas.
+
+
+"""
+#Load Data- Load the dataset directly from API or CSV into Pandas.
+"""
+
 print("Loading the dataset directly from API or CSV into Pandas")
 df.to_csv("earthquakes1.csv", index=False)
 df1 = pd.read_csv("earthquakes1.csv")
 print("Dataset loaded successfully")
 
-# Convert date/time fields (time, updated) to datetime objects.
-# Year, month, day, day_of_week from time.
+"""
+# As per the project description:
+1. Convert date/time fields (time, updated) to datetime objects.
+2. Year, month, day, day_of_week from time.
+"""
+
 df1['time'] = pd.to_datetime(df1['time'])
 df1['updated'] = pd.to_datetime(df1['updated'])
 df1['year'] = df1['time'].dt.year
@@ -89,7 +106,18 @@ df1['day'] = df1['time'].dt.day
 df1['day_of_week'] = df1['time'].dt.day_name()
 df1['hour'] = df1['time'].dt.hour
 # print(df1)
-# 2.Clean Text Fields 
+
+
+# ----------------------------------------
+# STEP:2 : Data Cleaning
+# ----------------------------------------
+
+"""
+1. Clean Text fields:
+a. Drop columns with no values (magerror, magnst, deptherror).
+b. Use Regex to extract country from place.
+c. Normalize alert field (if exists) to lowercase.
+"""
 
 df1.drop(columns=['magerror','magnst','deptherror'], inplace=True)  #Dropping columns with no values
 
@@ -138,6 +166,12 @@ for i, j in replacements:
 #●	 Normalize alert field (if exists) to lowercase.
 df['alert']= df['alert'].str.lower()
 df['alert'].value_counts().reset_index()
+
+"""
+2. Clean Numeric fields:
+a. Convert mag, depth_km, nst, dmin, rms, gap, magError, depthError, magNst, sig to numeric.
+b. Fill missing numeric values.
+"""
 
 # Clean Numeric fields-Convert mag, depth_km, nst, dmin, rms, gap, magError, depthError, magNst, sig to numeric.
 df1['mag'] = df1['mag'].astype(float)
@@ -213,7 +247,16 @@ df1['alert']=df1['alert'].fillna('Data_Not_available')
 
 print("Data cleaning completed")
 
-# Adding derived columns from existing data
+# ----------------------------------------
+# STEP:3 : Add Derived Columns
+# ----------------------------------------
+"""
+As per the prject description:
+a. Deriving Shallow/deep earthquake columns based on depth_km
+b. Deriving strong/destructive column based on mag thresholds.
+c. Adding continent column of the respective country
+
+"""
 # Deriving Shallow/deep earthquake columns based on depth_km
 EQ_type=[]
 for i in df1['depth_km']:
@@ -243,6 +286,7 @@ for i in df1['mag']:
 df1['EQ_intensity']= EQ_intensity
 
 #Adding continent column of the respective country
+
 # ── STEP 1: pycountry auto-resolves clean country names (203/532 unique values)
 unique_countries = df1['country'].unique()
 lookup_cache = {}
@@ -397,7 +441,9 @@ df1.to_csv("EQ_finaldata.csv", index=False)
 
 print("Final CSV export completed")
 
-# Transferring data to sql DB
+# ----------------------------------------
+# STEP:4 : Storing data to sql DB
+# ----------------------------------------
 
 print("Starting data upload to SQL database...")
 table_name = "eq_table1"
@@ -415,5 +461,6 @@ except Exception as e:
 engine = create_engine('mysql+pymysql://root:Mwin%402028@127.0.0.1:3306/EQ1')
 df2 = pd.read_csv("EQ_finaldata.csv")
 df2.to_sql(table_name, engine, if_exists='replace', index=False)
-print(f"Uploaded {len(df2)} rows to databse EQ1")
+print(f"Uploaded {len(df2)} rows to databse EQ")
 print("Data upload to SQL completed")
+print("All steps of Data pipeline completed successfully")
