@@ -5,6 +5,9 @@ from datetime import datetime
 from sqlalchemy import create_engine
 import pymysql
 
+print("Imports Completed")
+print("Starting data scraping...")
+
 url = "https://earthquake.usgs.gov/fdsnws/event/1/query"
 
 all_records = []
@@ -66,11 +69,13 @@ df = pd.DataFrame(all_records)
 # print("Columns:", df.shape[1])
 # print(df)
 # print (all_records) 
-print("Data Scrapping completed")
+print("Data Scrapping completed and saved into csv file")
 #1. 	Load Data
 # Load the dataset directly from API or CSV into Pandas.
+print("Loading the dataset directly from API or CSV into Pandas")
 df.to_csv("earthquakes1.csv", index=False)
 df1 = pd.read_csv("earthquakes1.csv")
+print("Dataset loaded successfully")
 
 # Convert date/time fields (time, updated) to datetime objects.
 # Year, month, day, day_of_week from time.
@@ -396,6 +401,7 @@ print("Final CSV export completed")
 # Transferring data to sql DB
 
 print("Starting data upload to SQL database...")
+table_name = "eq_table1"
 # --- Create database ---
 try:
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='Mwin@2028')
@@ -409,6 +415,6 @@ except Exception as e:
 
 engine = create_engine('mysql+pymysql://root:Mwin%402028@127.0.0.1:3306/EQ1')
 df2 = pd.read_csv("EQ_finaldata.csv")
-df2.to_sql("EQ_data", engine, if_exists='replace', index=False)
-print(f"Uploaded {len(df2)} rows to databse EQ")
+df2.to_sql(table_name, engine, if_exists='replace', index=False)
+print(f"Uploaded {len(df2)} rows to databse EQ1")
 print("Data upload to SQL completed")
